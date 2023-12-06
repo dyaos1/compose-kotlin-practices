@@ -1,0 +1,6 @@
+2023-12-06 13:53:04.624271+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE [*]IF NOT EXIST messages ( id VARCHAR(60) PRIMARY KEY, text VARCHAR NOT NULL )"; expected "identifier"; SQL statement:
+CREATE TABLE IF NOT EXIST messages ( id VARCHAR(60) PRIMARY KEY, text VARCHAR NOT NULL ) [42001-224]
+2023-12-06 13:54:54.783497+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE [*]IF NOT EXIST messages ( id VARCHAR(60) PRIMARY KEY, text VARCHAR NOT NULL )"; expected "identifier"; SQL statement:
+CREATE TABLE IF NOT EXIST messages ( id VARCHAR(60) PRIMARY KEY, text VARCHAR NOT NULL ) [42001-224]
