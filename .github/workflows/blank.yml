@@ -25,7 +25,7 @@ jobs:
         distribution: 'zulu'
   
     - name: Build with Gradle
-      run: cd kotlin-bbs && ./gradlew clean build
+      run: ./bbs/gradlew clean build
   
     - name: Get current time
       uses: 1466587594/get-current-time@v2
@@ -37,7 +37,7 @@ jobs:
     - name: Generate deployment package
       run: |
         mkdir -p deploy
-        cp kotlin-bbs/build/libs/*.jar deploy/application.jar
+        cp bbs/build/libs/*.jar deploy/application.jar
         cd deploy && zip -r deploy.zip .
   
     - name: Beanstalk Deploy
