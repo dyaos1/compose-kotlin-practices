@@ -25,7 +25,7 @@ jobs:
         distribution: 'zulu'
   
     - name: Build with Gradle
-      run: ./kotlin-bbs/gradlew clean build
+      run: cd kotlin-bbs && ./gradlew clean build
   
     - name: Get current time
       uses: 1466587594/get-current-time@v2
