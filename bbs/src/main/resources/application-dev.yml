@@ -1,0 +1,14 @@
+spring:
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://awseb-e-svdfwemdnh-stack-awsebrdsdatabase-qghq5qefgdts.cw6rovitg0xz.ap-northeast-2.rds.amazonaws.com/board?useSSL=false&serverTimezone=Asia/Seoul
+        username: spark
+        password: pass123#
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+
