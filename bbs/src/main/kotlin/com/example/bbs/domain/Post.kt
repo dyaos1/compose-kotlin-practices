@@ -2,16 +2,13 @@ package com.example.bbs.domain
 
 import com.example.bbs.exception.PostNotUpdatableException
 import com.example.bbs.service.dto.PostUpdateRequestDto
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 class Post(
     createdBy: String,
     title: String,
-    content: String
+    content: String,
 ) : BaseEntity(createdBy) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,8 +19,12 @@ class Post(
     var content: String = content
         protected set
 
-    fun update( postUpdateRequestDto: PostUpdateRequestDto ) {
-        if(this.createdBy != postUpdateRequestDto.updatedBy) {
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = [CascadeType.ALL])
+    var comments: MutableList<Comment> = mutableListOf()
+        protected set
+
+    fun update(postUpdateRequestDto: PostUpdateRequestDto) {
+        if (this.createdBy != postUpdateRequestDto.updatedBy) {
             throw PostNotUpdatableException()
         }
         this.title = postUpdateRequestDto.title

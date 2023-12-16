@@ -1,6 +1,5 @@
 package com.example.bbs.controller.dto
 
-import com.example.bbs.service.dto.PostDetailResponseDto
 import com.example.bbs.service.dto.PostSearchRequestDto
 import org.springframework.web.bind.annotation.RequestParam
 
@@ -14,5 +13,5 @@ data class PostSearchRequest(
 
 fun PostSearchRequest.toDto() = PostSearchRequestDto(
     title = title,
-    createdBy = createdBy,
+    createdBy = createdBy
 )

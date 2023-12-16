@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 class PostController(
-    private val postService: PostService
+    private val postService: PostService,
 ) {
 
     @PostMapping("/posts")
@@ -21,7 +21,7 @@ class PostController(
     @PutMapping("/posts/{id}")
     fun updatePost(
         @PathVariable id: Long,
-        @RequestBody postUpdateRequest: PostUpdateRequest
+        @RequestBody postUpdateRequest: PostUpdateRequest,
     ): Long {
         return postService.updatePost(id, postUpdateRequest.toDto())
     }
@@ -29,7 +29,7 @@ class PostController(
     @DeleteMapping("/posts/{id}")
     fun deletePost(
         @PathVariable id: Long,
-        @RequestParam createdBy: String
+        @RequestParam createdBy: String,
     ): Long {
         return postService.deletePost(id, createdBy)
     }
@@ -38,7 +38,7 @@ class PostController(
     fun getPost(
         @PathVariable id: Long,
     ): PostDetailResponse {
-        return postService.getPost(id).toResponse();
+        return postService.getPost(id).toResponse()
     }
 
     @GetMapping("/posts")
@@ -46,8 +46,6 @@ class PostController(
         pageable: Pageable,
         postSearchRequest: PostSearchRequest,
     ): Page<PostSummaryResponse> {
-        return postService.findPageBy(pageable, postSearchRequest.toDto()).toResponse();
+        return postService.findPageBy(pageable, postSearchRequest.toDto()).toResponse()
     }
 }
-
-

@@ -5,12 +5,11 @@ import java.time.LocalDateTime
 
 @MappedSuperclass
 abstract class BaseEntity(
-    createdBy: String
+    createdBy: String,
 ) {
     val createdBy: String = createdBy
     val createdAt: LocalDateTime = LocalDateTime.now()
     var updatedBy: String? = null
-        protected set
     var updatedAt: LocalDateTime? = null
         protected set
 
@@ -18,5 +17,4 @@ abstract class BaseEntity(
         this.updatedBy = updatedBy
         this.updatedAt = LocalDateTime.now()
     }
-
 }

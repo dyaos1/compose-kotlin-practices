@@ -9,5 +9,7 @@ data class PostCreateRequestDto(
 )
 
 fun PostCreateRequestDto.toEntity() = Post(
-    createdBy= createdBy, title= title, content= content
+    createdBy = createdBy,
+    title = title,
+    content = content
 )

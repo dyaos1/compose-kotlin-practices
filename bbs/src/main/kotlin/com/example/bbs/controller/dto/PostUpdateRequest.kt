@@ -1,6 +1,5 @@
 package com.example.bbs.controller.dto
 
-import com.example.bbs.service.dto.PostCreateRequestDto
 import com.example.bbs.service.dto.PostUpdateRequestDto
 
 data class PostUpdateRequest(
@@ -12,5 +11,5 @@ data class PostUpdateRequest(
 fun PostUpdateRequest.toDto() = PostUpdateRequestDto(
     title = title,
     content = content,
-    updatedBy = updatedBy,
+    updatedBy = updatedBy
 )

@@ -22,20 +22,20 @@ import org.springframework.data.repository.findByIdOrNull
 class PostServiceTest(
     private val postService: PostService,
     private val postRepository: PostRepository,
-): BehaviorSpec({
+) : BehaviorSpec({
     beforeSpec {
         postRepository.saveAll(
             listOf(
-                Post(title="title1", content="content1", createdBy = "spark1"),
-                Post(title="title12", content="content2", createdBy = "spark1"),
-                Post(title="title13", content="content3", createdBy = "spark1"),
-                Post(title="title14", content="content4", createdBy = "spark1"),
-                Post(title="title5", content="content5", createdBy = "spark1"),
-                Post(title="title6", content="content6", createdBy = "spark2"),
-                Post(title="title7", content="content7", createdBy = "spark2"),
-                Post(title="title8", content="content8", createdBy = "spark2"),
-                Post(title="title9", content="content9", createdBy = "spark2"),
-                Post(title="title10", content="content10", createdBy = "spark2"),
+                Post(title = "title1", content = "content1", createdBy = "spark1"),
+                Post(title = "title12", content = "content2", createdBy = "spark1"),
+                Post(title = "title13", content = "content3", createdBy = "spark1"),
+                Post(title = "title14", content = "content4", createdBy = "spark1"),
+                Post(title = "title5", content = "content5", createdBy = "spark1"),
+                Post(title = "title6", content = "content6", createdBy = "spark2"),
+                Post(title = "title7", content = "content7", createdBy = "spark2"),
+                Post(title = "title8", content = "content8", createdBy = "spark2"),
+                Post(title = "title9", content = "content9", createdBy = "spark2"),
+                Post(title = "title10", content = "content10", createdBy = "spark2")
             )
         )
     }
@@ -43,10 +43,10 @@ class PostServiceTest(
         When("게시글 인풋이 정상적으로 들어오면") {
             val postId = postService.createPost(
                 PostCreateRequestDto(
-                title="제목",
-                content="내용",
-                createdBy="작성자",
-            )
+                    title = "제목",
+                    content = "내용",
+                    createdBy = "작성자"
+                )
             )
             then("게시글이 정상적으로 생성됨을 확인") {
                 postId shouldBeGreaterThan 0L
@@ -60,15 +60,19 @@ class PostServiceTest(
     given("게시글 수정") {
         val saved = postRepository.save(
             Post(
-            title="title", content="content", createdBy="spark"
-        )
+                title = "title",
+                content = "content",
+                createdBy = "spark"
+            )
         )
         When("정상 수정시") {
-            val updatedId = postService.updatePost(saved.id, PostUpdateRequestDto(
-                title = "update title",
-                content = "update content",
-                updatedBy = "spark",
-            )
+            val updatedId = postService.updatePost(
+                saved.id,
+                PostUpdateRequestDto(
+                    title = "update title",
+                    content = "update content",
+                    updatedBy = "spark"
+                )
             )
             then("게시글이 정상적으로 수정됨을 확인") {
                 saved.id shouldBe updatedId
@@ -83,22 +87,30 @@ class PostServiceTest(
         When("게시글이 없을때") {
 
             then("게시글을 찾을 수 없다는 에러 발생") {
-                shouldThrow<PostNotFoundException> { postService.updatePost(99L, PostUpdateRequestDto(
-                    title = "update title",
-                    content = "update content",
-                    updatedBy = "update spark",
-                )) }
+                shouldThrow<PostNotFoundException> {
+                    postService.updatePost(
+                        99L,
+                        PostUpdateRequestDto(
+                            title = "update title",
+                            content = "update content",
+                            updatedBy = "update spark"
+                        )
+                    )
+                }
             }
         }
 
         When("작성자가 동일하지 않으면") {
             then("수정할수 없는 게시글이라고 에러 발생") {
-                shouldThrow<PostNotUpdatableException> { postService.updatePost(1L, PostUpdateRequestDto(
-                    title = "update title",
-                    content = "update content",
-                    updatedBy = "update spark",
-                ))
-
+                shouldThrow<PostNotUpdatableException> {
+                    postService.updatePost(
+                        1L,
+                        PostUpdateRequestDto(
+                            title = "update title",
+                            content = "update content",
+                            updatedBy = "update spark"
+                        )
+                    )
                 }
             }
         }
@@ -107,8 +119,11 @@ class PostServiceTest(
     given("게시글 삭제") {
         val saved = postRepository.save(
             Post(
-                title="title", content="content", createdBy="spark"
-            ))
+                title = "title",
+                content = "content",
+                createdBy = "spark"
+            )
+        )
         When("정상 삭제") {
             val postId = postService.deletePost(saved.id, "spark")
             then("이상 무") {
@@ -118,11 +133,14 @@ class PostServiceTest(
         }
         val saved2 = postRepository.save(
             Post(
-                title="title", content="content", createdBy="spark"
-            ))
-        When("작성자와 동일하지 않을 때"){
+                title = "title",
+                content = "content",
+                createdBy = "spark"
+            )
+        )
+        When("작성자와 동일하지 않을 때") {
             then("삭제 할 수 없는 게시글입니다 라고 오류 발생") {
-                shouldThrow<PostNotDeletableException> { postService.deletePost(saved2.id, "no spark")}
+                shouldThrow<PostNotDeletableException> { postService.deletePost(saved2.id, "no spark") }
             }
         }
     }
@@ -130,8 +148,11 @@ class PostServiceTest(
     given("게시글 상세조회") {
         val saved = postRepository.save(
             Post(
-                title="title", content="content", createdBy="spark"
-            ))
+                title = "title",
+                content = "content",
+                createdBy = "spark"
+            )
+        )
         When("정상조회시") {
             val post = postService.getPost(saved.id)
             then("게시글의 내용이 정상적으로 반환 됨을 확인") {
@@ -151,9 +172,10 @@ class PostServiceTest(
     given("게시글 목록 조회시") {
         When("정상 조회") {
             val postPage = postService.findPageBy(
-                PageRequest.of(0,5),
-                PostSearchRequestDto())
-            then("게시글 페이지 반환"){
+                PageRequest.of(0, 5),
+                PostSearchRequestDto()
+            )
+            then("게시글 페이지 반환") {
                 postPage.number shouldBe 0
                 postPage.size shouldBe 5
                 postPage.content.size shouldBe 5
@@ -164,7 +186,8 @@ class PostServiceTest(
         When("타이틀로 검색") {
             val postPage = postService.findPageBy(
                 PageRequest.of(0, 5),
-                PostSearchRequestDto(title = "title1"))
+                PostSearchRequestDto(title = "title1")
+            )
             then("타이틀에 해당하는 게시글 반환") {
                 postPage.number shouldBe 0
                 postPage.size shouldBe 5

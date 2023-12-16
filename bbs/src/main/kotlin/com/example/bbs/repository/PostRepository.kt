@@ -10,9 +10,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
-interface PostRepository: JpaRepository<Post, Long>, CustomPostRepository
+interface PostRepository : JpaRepository<Post, Long>, CustomPostRepository
 
-interface CustomPostRepository{
+interface CustomPostRepository {
     fun findPageBy(pageRequest: Pageable, postSearchRequestDto: PostSearchRequestDto): Page<Post>
 }
 
