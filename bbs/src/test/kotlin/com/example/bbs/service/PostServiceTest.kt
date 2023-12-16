@@ -6,13 +6,16 @@ import com.example.bbs.exception.PostNotFoundException
 import com.example.bbs.exception.PostNotUpdatableException
 import com.example.bbs.repository.PostRepository
 import com.example.bbs.service.dto.PostCreateRequestDto
+import com.example.bbs.service.dto.PostSearchRequestDto
 import com.example.bbs.service.dto.PostUpdateRequestDto
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 
 @SpringBootTest
@@ -20,6 +23,22 @@ class PostServiceTest(
     private val postService: PostService,
     private val postRepository: PostRepository,
 ): BehaviorSpec({
+    beforeSpec {
+        postRepository.saveAll(
+            listOf(
+                Post(title="title1", content="content1", createdBy = "spark1"),
+                Post(title="title12", content="content2", createdBy = "spark1"),
+                Post(title="title13", content="content3", createdBy = "spark1"),
+                Post(title="title14", content="content4", createdBy = "spark1"),
+                Post(title="title5", content="content5", createdBy = "spark1"),
+                Post(title="title6", content="content6", createdBy = "spark2"),
+                Post(title="title7", content="content7", createdBy = "spark2"),
+                Post(title="title8", content="content8", createdBy = "spark2"),
+                Post(title="title9", content="content9", createdBy = "spark2"),
+                Post(title="title10", content="content10", createdBy = "spark2"),
+            )
+        )
+    }
     given("게시글 생성시") {
         When("게시글 인풋이 정상적으로 들어오면") {
             val postId = postService.createPost(
@@ -107,6 +126,65 @@ class PostServiceTest(
             }
         }
     }
-}) {
 
-}
+    given("게시글 상세조회") {
+        val saved = postRepository.save(
+            Post(
+                title="title", content="content", createdBy="spark"
+            ))
+        When("정상조회시") {
+            val post = postService.getPost(saved.id)
+            then("게시글의 내용이 정상적으로 반환 됨을 확인") {
+                post.id shouldBe saved.id
+                post.title shouldBe "title"
+                post.content shouldBe "content"
+                post.createdBy shouldBe "spark"
+            }
+        }
+        When("게시글이 없을때") {
+            then("게시글을 찾을수 없다는 오류 리턴") {
+                shouldThrow<PostNotFoundException> { postService.getPost(999L) }
+            }
+        }
+    }
+
+    given("게시글 목록 조회시") {
+        When("정상 조회") {
+            val postPage = postService.findPageBy(
+                PageRequest.of(0,5),
+                PostSearchRequestDto())
+            then("게시글 페이지 반환"){
+                postPage.number shouldBe 0
+                postPage.size shouldBe 5
+                postPage.content.size shouldBe 5
+                postPage.content[0].title shouldContain "title"
+                postPage.content[0].createdBy shouldBe "spark2"
+            }
+        }
+        When("타이틀로 검색") {
+            val postPage = postService.findPageBy(
+                PageRequest.of(0, 5),
+                PostSearchRequestDto(title = "title1"))
+            then("타이틀에 해당하는 게시글 반환") {
+                postPage.number shouldBe 0
+                postPage.size shouldBe 5
+                postPage.content.size shouldBe 5
+                postPage.content[0].title shouldContain "title1"
+                postPage.content[0].createdBy shouldBe "spark2"
+            }
+        }
+        When("작성자로 검색") {
+            val postPage = postService.findPageBy(
+                PageRequest.of(0, 5),
+                PostSearchRequestDto(createdBy = "spark1")
+            )
+            then("작성자에 해당하는 게시글 반환") {
+                postPage.number shouldBe 0
+                postPage.size shouldBe 5
+                postPage.content.size shouldBe 5
+                postPage.content[0].title shouldContain "title5"
+                postPage.content[0].createdBy shouldBe "spark1"
+            }
+        }
+    }
+})
