@@ -14,9 +14,10 @@ class Post(
     createdBy: String,
     title: String,
     content: String,
+    tags: List<String> = emptyList(),
 ) : BaseEntity(createdBy) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
     var title: String = title
@@ -26,6 +27,10 @@ class Post(
 
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = [CascadeType.ALL])
     var comments: MutableList<Comment> = mutableListOf()
+        protected set
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = [CascadeType.ALL])
+    var tags: MutableList<Tag> = tags.map { Tag(it, this, createdBy) }.toMutableList()
         protected set
 
     fun update(postUpdateRequestDto: PostUpdateRequestDto) {
