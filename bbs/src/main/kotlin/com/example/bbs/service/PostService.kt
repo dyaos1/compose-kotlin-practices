@@ -4,7 +4,14 @@ import com.example.bbs.domain.Post
 import com.example.bbs.exception.PostNotDeletableException
 import com.example.bbs.exception.PostNotFoundException
 import com.example.bbs.repository.PostRepository
-import com.example.bbs.service.dto.*
+import com.example.bbs.service.dto.PostCreateRequestDto
+import com.example.bbs.service.dto.PostDetailResponseDto
+import com.example.bbs.service.dto.PostSearchRequestDto
+import com.example.bbs.service.dto.PostSummaryResponseDto
+import com.example.bbs.service.dto.PostUpdateRequestDto
+import com.example.bbs.service.dto.toDetailResponseDto
+import com.example.bbs.service.dto.toEntity
+import com.example.bbs.service.dto.toSummaryResponseDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull

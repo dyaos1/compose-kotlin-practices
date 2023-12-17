@@ -198,7 +198,7 @@ class PostServiceTest(
                 postPage.size shouldBe 5
                 postPage.content.size shouldBe 5
                 postPage.content[0].title shouldContain "title"
-                postPage.content[0].createdBy shouldBe "spark2"
+                postPage.content[0].createdBy shouldBe "spark"
             }
         }
         When("타이틀로 검색") {
