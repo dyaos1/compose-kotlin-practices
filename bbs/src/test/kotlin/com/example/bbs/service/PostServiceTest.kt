@@ -171,9 +171,9 @@ class PostServiceTest(
             }
         }
         When("댓글 추가시") {
-            commentRepository.save(Comment(content="댓글 내용1", post= saved, createdBy = "댓글 작성자1"))
-            commentRepository.save(Comment(content="댓글 내용2", post= saved, createdBy = "댓글 작성자2"))
-            commentRepository.save(Comment(content="댓글 내용3", post= saved, createdBy = "댓글 작성자3"))
+            commentRepository.save(Comment(content = "댓글 내용1", post = saved, createdBy = "댓글 작성자1"))
+            commentRepository.save(Comment(content = "댓글 내용2", post = saved, createdBy = "댓글 작성자2"))
+            commentRepository.save(Comment(content = "댓글 내용3", post = saved, createdBy = "댓글 작성자3"))
             val post = postService.getPost(saved.id)
             then("댓글이 함께 조회됨을 확인") {
                 post.comments.size shouldBe 3
