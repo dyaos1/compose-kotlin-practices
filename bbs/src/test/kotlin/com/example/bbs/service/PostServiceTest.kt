@@ -2,6 +2,7 @@ package com.example.bbs.service
 
 import com.example.bbs.domain.Comment
 import com.example.bbs.domain.Post
+import com.example.bbs.domain.Tag
 import com.example.bbs.exception.PostNotDeletableException
 import com.example.bbs.exception.PostNotFoundException
 import com.example.bbs.exception.PostNotUpdatableException
@@ -10,6 +11,7 @@ import com.example.bbs.repository.PostRepository
 import com.example.bbs.repository.TagRepository
 import com.example.bbs.service.dto.PostCreateRequestDto
 import com.example.bbs.service.dto.PostSearchRequestDto
+import com.example.bbs.service.dto.PostSummaryResponseDto
 import com.example.bbs.service.dto.PostUpdateRequestDto
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -18,6 +20,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 
@@ -31,16 +34,16 @@ class PostServiceTest(
     beforeSpec {
         postRepository.saveAll(
             listOf(
-                Post(title = "title1", content = "content1", createdBy = "spark1"),
-                Post(title = "title12", content = "content2", createdBy = "spark1"),
-                Post(title = "title13", content = "content3", createdBy = "spark1"),
-                Post(title = "title14", content = "content4", createdBy = "spark1"),
-                Post(title = "title5", content = "content5", createdBy = "spark1"),
-                Post(title = "title6", content = "content6", createdBy = "spark2"),
-                Post(title = "title7", content = "content7", createdBy = "spark2"),
-                Post(title = "title8", content = "content8", createdBy = "spark2"),
-                Post(title = "title9", content = "content9", createdBy = "spark2"),
-                Post(title = "title10", content = "content10", createdBy = "spark2")
+                Post(title = "title1", content = "content1", createdBy = "spark1", tags = listOf("tag1", "tag2")),
+                Post(title = "title12", content = "content2", createdBy = "spark1", tags = listOf("tag1", "tag2")),
+                Post(title = "title13", content = "content3", createdBy = "spark1", tags = listOf("tag1", "tag2")),
+                Post(title = "title14", content = "content4", createdBy = "spark1", tags = listOf("tag1", "tag2")),
+                Post(title = "title5", content = "content5", createdBy = "spark1", tags = listOf("tag1", "tag2")),
+                Post(title = "title6", content = "content6", createdBy = "spark2", tags = listOf("tag1", "tag5")),
+                Post(title = "title7", content = "content7", createdBy = "spark2", tags = listOf("tag1", "tag5")),
+                Post(title = "title8", content = "content8", createdBy = "spark2", tags = listOf("tag1", "tag5")),
+                Post(title = "title9", content = "content9", createdBy = "spark2", tags = listOf("tag1", "tag5")),
+                Post(title = "title10", content = "content10", createdBy = "spark2", tags = listOf("tag1", "tag5")),
             )
         )
     }
@@ -202,6 +205,13 @@ class PostServiceTest(
                 createdBy = "spark"
             )
         )
+        tagRepository.saveAll(
+            listOf(
+                Tag(name="tag1", post=saved, createdBy="spark1"),
+                Tag(name="tag2", post=saved, createdBy="spark2"),
+                Tag(name="tag3", post=saved, createdBy="spark3"),
+            )
+        )
         When("정상조회시") {
             val post = postService.getPost(saved.id)
             then("게시글의 내용이 정상적으로 반환 됨을 확인") {
@@ -209,6 +219,12 @@ class PostServiceTest(
                 post.title shouldBe "title"
                 post.content shouldBe "content"
                 post.createdBy shouldBe "spark"
+            }
+            then("태그가 정상적으로 조회됨을 확인"){
+                post.tags.size shouldBe 3
+                post.tags[0] shouldBe "tag1"
+                post.tags[1] shouldBe "tag2"
+                post.tags[2] shouldBe "tag3"
             }
         }
         When("게시글이 없을때") {
@@ -261,7 +277,7 @@ class PostServiceTest(
             }
         }
         When("작성자로 검색") {
-            val postPage = postService.findPageBy(
+            val postPage: Page<PostSummaryResponseDto> = postService.findPageBy(
                 PageRequest.of(0, 5),
                 PostSearchRequestDto(createdBy = "spark1")
             )
@@ -271,6 +287,25 @@ class PostServiceTest(
                 postPage.content.size shouldBe 5
                 postPage.content[0].title shouldContain "title5"
                 postPage.content[0].createdBy shouldBe "spark1"
+            }
+            then("첫번째 태그가 함께 조회됨") {
+                postPage.content.forEach {
+                    it.firstTag shouldBe "tag1"
+                }
+            }
+        }
+        When("태그로 검색") {
+            val postPage = postService.findPageBy(
+                PageRequest.of(0, 5),
+                PostSearchRequestDto(tag = "tag5")
+            )
+            then("태그에 해당하는 게시글 반환") {
+                postPage.number shouldBe 0
+                postPage.size shouldBe 5
+                postPage.content.size shouldBe 5
+                postPage.content[0].title shouldBe "title10"
+                postPage.content[1].title shouldBe "title9"
+                postPage.content[4].title shouldBe "title6"
             }
         }
     }

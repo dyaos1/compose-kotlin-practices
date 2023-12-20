@@ -43,7 +43,6 @@ class PostService(
         return id
     }
 
-    @Transactional
     fun getPost(id: Long): PostDetailResponseDto {
         return postRepository.findByIdOrNull(id)?.toDetailResponseDto() ?: throw PostNotFoundException()
     }
