@@ -18,7 +18,7 @@ class Post(
 ) : BaseEntity(createdBy) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    val id: Long = 0L
 
     var title: String = title
         protected set
@@ -43,11 +43,10 @@ class Post(
         super.update(postUpdateRequestDto.updatedBy)
     }
 
-    private fun replaceTags(tags: List<String>){
-        if(this.tags.map { it.name } != tags) {
+    private fun replaceTags(tags: List<String>) {
+        if (this.tags.map { it.name } != tags) {
             this.tags.clear()
             this.tags.addAll(tags.map { Tag(it, this, createdBy) })
         }
     }
-
 }
