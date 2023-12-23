@@ -12,3 +12,9 @@ spring:
             hibernate:
                 format_sql: true
 
+#    cache:
+#        type: redis
+#        redis:
+#            host: aws elasticash
+#            port: 6379
+
