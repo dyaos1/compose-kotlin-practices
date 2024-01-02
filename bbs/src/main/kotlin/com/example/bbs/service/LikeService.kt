@@ -31,6 +31,5 @@ class LikeService(
             redisUtil.setData(redisUtil.getLikeCountKey(postId), this)
             return this
         }
-
     }
 }
