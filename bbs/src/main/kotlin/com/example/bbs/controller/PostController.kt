@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController
 class PostController(
     private val postService: PostService,
 ) {
-
     @PostMapping("/posts")
     fun createPost(
         @RequestBody postCreateRequest: PostCreateRequest,

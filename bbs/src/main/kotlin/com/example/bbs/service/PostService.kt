@@ -4,6 +4,7 @@ import com.example.bbs.domain.Post
 import com.example.bbs.exception.PostNotDeletableException
 import com.example.bbs.exception.PostNotFoundException
 import com.example.bbs.repository.PostRepository
+import com.example.bbs.repository.TagRepository
 import com.example.bbs.service.dto.PostCreateRequestDto
 import com.example.bbs.service.dto.PostDetailResponseDto
 import com.example.bbs.service.dto.PostSearchRequestDto
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class PostService(
     private val postRepository: PostRepository,
+    private val likeService: LikeService,
+    private val tagRepository: TagRepository,
 ) {
     @Transactional // readOnly 를 빼주어야 한다.
     fun createPost(requestDto: PostCreateRequestDto): Long {
@@ -43,12 +46,14 @@ class PostService(
         return id
     }
 
-    @Transactional
     fun getPost(id: Long): PostDetailResponseDto {
-        return postRepository.findByIdOrNull(id)?.toDetailResponseDto() ?: throw PostNotFoundException()
+        return postRepository.findByIdOrNull(id)?.toDetailResponseDto(likeService::countLike) ?: throw PostNotFoundException()
     }
 
     fun findPageBy(pageRequest: Pageable, postSearchRequestDto: PostSearchRequestDto): Page<PostSummaryResponseDto> {
-        return postRepository.findPageBy(pageRequest, postSearchRequestDto).toSummaryResponseDto()
+        postSearchRequestDto.tag?.let {
+            return tagRepository.findPageBy(pageRequest, it).toSummaryResponseDto(likeService::countLike)
+        }
+        return postRepository.findPageBy(pageRequest, postSearchRequestDto).toSummaryResponseDto(likeService::countLike)
     }
 }
