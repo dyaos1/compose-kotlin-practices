@@ -5,10 +5,12 @@ import com.example.membershipservice.adapter.out.persistence.MembershipMapper;
 import com.example.membershipservice.application.port.in.RegisterMembershipCommand;
 import com.example.membershipservice.application.port.in.RegisterMembershipUseCase;
 import com.example.membershipservice.application.port.out.RegisterMembershipPort;
+import com.example.membershipservice.common.UseCase;
 import com.example.membershipservice.domain.Membership;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+@UseCase
 @RequiredArgsConstructor
 @Transactional
 public class RegisterMembershipService implements RegisterMembershipUseCase {

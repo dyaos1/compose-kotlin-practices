@@ -1,6 +1,5 @@
 package com.example.membershipservice.application.port.in;
 
-import com.example.membershipservice.common.SelfValidating;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,8 +9,8 @@ import lombok.EqualsAndHashCode;
 
 @Builder
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class RegisterMembershipCommand extends SelfValidating<RegisterMembershipCommand> {
+@EqualsAndHashCode()
+public class RegisterMembershipCommand {
 
     @NotNull
     @NotBlank
@@ -36,6 +35,6 @@ public class RegisterMembershipCommand extends SelfValidating<RegisterMembership
         this.isValid = isValid;
         this.isCorp = isCorp;
 
-        this.validateSelf();
+        // this.validateSelf();
     }
 }
